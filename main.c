@@ -1,36 +1,31 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <assert.h>
+
+#include "dice.h"
 
 int main(int argc, char* argv[]) {
     int nFaces = 0;
     printf("Quantas faces tem o seu dado? ");
-    scanf("%d", &nFaces);
+    scanf("%d%*c", &nFaces);
 
-    int* faces = (int*)calloc(nFaces ,sizeof(int));
+    Dice* d = dice_init(nFaces);
     
+    printf("Digite um numero negativo para finalizar o teste\n");
     int i = 1;
     while(1) {
-        int faceAtual;
-        printf("Digite um numero negativo para finalizar o teste\n");
+        int faceAtual = - 1;
         printf("Rolagem numero %d: ", i++);
-        scanf("%d", &faceAtual);
-        fflush(stdin);
-        system("clear");
+        scanf("%d%*c", &faceAtual);
 
-        if (faceAtual > nFaces)
-            continue;
         if (faceAtual < 0)
             break;
-
-        faces[faceAtual]++;
+    
+        dice_incrementFace(d, faceAtual);
     }
     
     printf("Numero de ocorrencias por face:\n");
     for (int i = 0; i < nFaces; i++)
-        printf("Face numero %d: %d\n", i + 1, faces[i + 1]);
+        printf("Face numero %d: %d\n", i + 1, dice_getFaceStat(d, i + 1));
 
-    free(faces);
-
+    dice_destroy(d);
     return 0;
 }
